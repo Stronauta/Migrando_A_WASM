@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
+using WASM_Tickets.Server.DAL;
 
 namespace WASM_Tickets
 {
@@ -7,11 +9,14 @@ namespace WASM_Tickets
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var ConStr = builder.Configuration.GetConnectionString("ConStr");
 
+            builder.Services.AddDbContext<TicketsContext>(options => options.UseSqlite(ConStr));
             // Add services to the container.
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+           
 
             var app = builder.Build();
 
