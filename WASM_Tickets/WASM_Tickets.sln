@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Tickets.Server", "Server\WASM_Tickets.Server.csproj", "{9807F304-645E-4744-9F49-C2CE84F4DB4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Tickets.Server", "Server\WASM_Tickets.Server.csproj", "{9807F304-645E-4744-9F49-C2CE84F4DB4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Tickets.Client", "Client\WASM_Tickets.Client.csproj", "{1D4E398C-CD82-4B3C-B3C6-34A5A2B12891}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Tickets.Client", "Client\WASM_Tickets.Client.csproj", "{1D4E398C-CD82-4B3C-B3C6-34A5A2B12891}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Tickets.Shared", "Shared\WASM_Tickets.Shared.csproj", "{41170217-D3E5-4B4F-B602-33052BAB1DA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Tickets.Shared", "Shared\WASM_Tickets.Shared.csproj", "{41170217-D3E5-4B4F-B602-33052BAB1DA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

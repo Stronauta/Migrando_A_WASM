@@ -1,0 +1,133 @@
+﻿@page "/R_Tickets"
+@page "/R_Tickets/{TicketId:int}"
+@inject HttpClient Httpclient
+@using WASM_Tickets.Shared
+
+<PageTitle>Registro de Tickets </PageTitle>
+
+<div class="card-header">
+	<h3 class="card align-items-center">Registro de Tickets</h3>
+</div>
+
+<EditForm Model="Ticket" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class=card-body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+                    <label>TicketsId</label>
+                    <div class="input-group mb-3">
+                        <InputNumber min="1" @bind-Value="Ticket.TicketsId" class="form-control" aria-describedby="BotonBuscar" />
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+                    <label>ClientesId:</label>
+                    <div class="input-group mb-3">
+                        <InputNumber min="1" @bind-Value="Ticket.ClientesId" class="form-control" aria-describedby="BotonBuscar" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row ml-auto">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+                    <label>SistemaId:</label>
+                    <div class="input-group mb-3">
+                        <InputNumber min="1" @bind-Value="Ticket.SistemaId" class="form-control" aria-describedby="BotonBuscar" />
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+                    <label>PrioridadId:</label>
+                    <div class="input-group mb-3">
+                        <InputNumber min="1" @bind-Value="Ticket.PrioridadId" class="form-control" aria-describedby="BotonBuscar" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <button type="button" @onclick="Buscar" class="btn btn-primary input-group-text">
+                    <i class="oi oi-magnifying-glass " />
+                </button>
+            </div>
+        </div>
+
+        @*Fecha*@
+        <div class="mb-3">
+            <label class="form-label" for="Fecha"> Fecha</label>
+            <InputDate @bind-Value="Ticket.Fecha" class="form-control" />
+        </div>
+
+        @*Solicitado Por*@
+        <div class="mb-3">
+            <label class="form-label" for="SolicitadoPor">Solicitado Por::</label>
+            <InputText @bind-Value="Ticket.SolicitadoPor" placeholder="Nombre del Solicitado" class="form-control" />
+            <ValidationMessage For="@(() => Ticket.SolicitadoPor)" />
+        </div>
+
+        @*Asunto*@
+        <div class="mb-3">
+            <label class="form-label" for="Asunto">Asunto:</label>
+            <InputText @bind-Value="Ticket.Asunto" placeholder="Descripción del Asunto" class="form-control" />
+            <ValidationMessage For="@(() => Ticket.Asunto)" />
+        </div>
+
+        @*Direccion*@
+        <div class="mb-3">
+            <label class="form-label" for="Direccion">Direcci&oacute;n</label>
+            <InputTextArea @bind-Value="Ticket.Descripcion" placeholder="Dirreción del Cliente" class="form-control" />
+            <ValidationMessage For="@(() => Ticket.Descripcion)" />
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+	[Parameter]
+	public int TicketId { get; set; }
+    public Tickets Ticket { get; set; } = new Tickets();
+    public string Mensaje { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TicketId > 0)
+        {
+            this.Ticket.ClientesId = TicketId;
+            await Buscar();
+        }
+    }
+
+    public async Task Buscar()
+    {
+        var clienteEncontrado = await Httpclient.GetFromJsonAsync<Tickets>($"api/Clientes/{Ticket.ClientesId}");
+        if (clienteEncontrado != null)
+        {
+            this.Ticket = clienteEncontrado;
+            StateHasChanged();
+        }
+        else
+        {
+            Mensaje = "Ticket no encontrado";
+        }
+    }
+
+    public async Task Guardar()
+    {
+        using var response = await Httpclient.PostAsJsonAsync("api/Tickets", Ticket);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            return;
+        }
+        var clienteDevuelto = await response.Content.ReadFromJsonAsync<Tickets>();
+        if (clienteDevuelto is not null)
+        {
+            Ticket = clienteDevuelto;
+            StateHasChanged();
+        }
+    }
+
+}
