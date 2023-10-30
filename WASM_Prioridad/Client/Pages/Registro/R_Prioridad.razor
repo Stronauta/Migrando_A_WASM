@@ -1,0 +1,96 @@
+﻿@page "/R_Prioridad"
+@page "/R_Prioridad/{PrioridadId:int}"
+@inject HttpClient Httpclient
+@using WASM_Prioridad.Shared
+
+<PageTitle>Registro de Prioridad </PageTitle>
+
+<div class="card-header">
+    <h3 class="card align-items-center">Registro de Prioridad</h3>
+</div>
+
+<EditForm Model="Prioridad" OnInvalidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class=card-body>
+
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+            <label>Prioridad Id:</label>
+            <div class="input-group mb-3">
+                <InputNumber min="1" @bind-Value="Prioridad.PrioridadId" class="form-control" aria-describedby="BotonBuscar" />
+                <button @onclick="Buscar" class="btn btn-outline-primary" type="button" id="BotonBuscar"><i class="oi oi-magnifying-glass" /></button>
+            </div>
+        </div>
+
+
+        @*Direccion*@
+        <div class="mb-3">
+            <label class="form-label" for="Descripcion">Descripci&oacute;n</label>
+            <InputTextArea @bind-Value="Prioridad.Descripcion" placeholder="Descripcion de la Prioridad" class="form-control" />
+            <ValidationMessage For="@(() => Prioridad.Descripcion)" />
+        </div>
+
+        @*DiasCompromiso*@
+        <div class="mb-3">
+            <label class="form-label" for="Nombre">Dias Compromiso:</label>
+            <InputText @bind-Value="Prioridad.DiasCompromiso" placeholder="Nombre del cliente" class="form-control" />
+            <ValidationMessage For="@(() => Prioridad.DiasCompromiso)" />
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int PrioridadId { get; set; }
+    public Prioridad Prioridad { get; set; } = new Prioridad();
+    public string Mensaje { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (PrioridadId > 0)
+        {
+            this.Prioridad.PrioridadId = PrioridadId;
+            await Buscar();
+        }
+    }
+
+    public async Task Buscar()
+    {
+        var clienteEncontrado = await Httpclient.GetFromJsonAsync<Prioridad>($"api/Prioridad/{Prioridad.PrioridadId}");
+        if (clienteEncontrado != null)
+        {
+            this.Prioridad = clienteEncontrado;
+            StateHasChanged();
+        }
+        else
+        {
+            Mensaje = "Ticket no encontrado";
+        }
+    }
+
+    public async Task Guardar()
+    {
+        using var response = await Httpclient.PostAsJsonAsync("api/Clientes", Prioridad);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            return;
+        }
+        var clienteDevuelto = await response.Content.ReadFromJsonAsync<Prioridad>();
+        if (clienteDevuelto is not null)
+        {
+            Prioridad = clienteDevuelto;
+            StateHasChanged();
+        }
+    }
+}
+
+
+@*         public int PrioridadId { get; set; }
+
+        [Required(ErrorMessage = "La descripción es requeridaaaaa")]
+        public string Descripcion { get; set; }
+
+        [Required(ErrorMessage = "Los días compromiso son requeridos")]
+        public int DiasCompromiso { get; set; } *@

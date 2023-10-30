@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Prioridad.Server", "Server\WASM_Prioridad.Server.csproj", "{4C2811D9-D300-4CA8-A8CC-6F7875CE2F4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Prioridad.Server", "Server\WASM_Prioridad.Server.csproj", "{4C2811D9-D300-4CA8-A8CC-6F7875CE2F4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Prioridad.Client", "Client\WASM_Prioridad.Client.csproj", "{E9B045DA-6749-426A-B51C-8F415AB0D78E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Prioridad.Client", "Client\WASM_Prioridad.Client.csproj", "{E9B045DA-6749-426A-B51C-8F415AB0D78E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Prioridad.Shared", "Shared\WASM_Prioridad.Shared.csproj", "{A80FE8B5-E89A-4F37-A269-BEA27866BC70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Prioridad.Shared", "Shared\WASM_Prioridad.Shared.csproj", "{A80FE8B5-E89A-4F37-A269-BEA27866BC70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

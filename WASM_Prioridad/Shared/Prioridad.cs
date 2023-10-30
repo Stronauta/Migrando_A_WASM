@@ -17,6 +17,6 @@ namespace WASM_Prioridad.Shared
         public string Descripcion { get; set; }
         [Required(ErrorMessage = "Los días de compromiso son requeridos")]
         [Range(1, 30, ErrorMessage = "Los días de compromiso deben estar entre 1 y 30")]
-        public int DiasCompromiso { get; set; }
+        public string DiasCompromiso { get; set; }
     }
 }
