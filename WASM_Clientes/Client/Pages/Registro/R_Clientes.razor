@@ -1,0 +1,120 @@
+﻿@page "/R_Clientes"
+@page "/R_Clientes/{ClientesId:int}"
+@inject HttpClient Httpclient
+@using WASM_Clientes.Shared
+
+<PageTitle>Registro de Clientes </PageTitle>
+
+<div class="card-header">
+	<h3 class="card align-items-center">Registro de Clientes</h3>
+</div>
+
+<EditForm Model="Cliente" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class=card-body>
+
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-4">
+            <label>Cliente Id:</label>
+            <div class="input-group mb-3">
+                <InputNumber min="1" @bind-Value="Cliente.ClientesId" class="form-control" aria-describedby="BotonBuscar" />
+                <button @onclick="Buscar" class="btn btn-outline-primary" type="button" id="BotonBuscar"><i class="oi oi-magnifying-glass" /></button>
+            </div>
+        </div>
+
+        @*Nombres*@
+        <div class="mb-3">
+            <label class="form-label" for="Nombre">Nombre:</label>
+            <InputText @bind-Value="Cliente.Nombre" placeholder="Nombre del cliente" class="form-control" />
+            <ValidationMessage For="@(() => Cliente.Nombre)" />
+        </div>
+
+        <div class="row">
+
+            @*Teléfono*@
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="Telefono">Tel&eacute;fono:</label>
+                <InputText @bind-Value="Cliente.Telefono" placeholder="Número Telefónico" class="form-control" />
+                <ValidationMessage For="@(() => Cliente.Telefono)" />
+            </div>
+
+            @*Celular*@
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="Celular">Celular:</label>
+                <InputText @bind-Value="Cliente.Celular" placeholder="Número del Celular" class="form-control" />
+                <ValidationMessage For="@(() => Cliente.Celular)" />
+            </div>
+
+        </div>
+
+        @*Rnc*@
+        <div class="mb-3">
+            <label class="form-label" for="RNC">RNC:</label>
+            <InputText @bind-Value="Cliente.Rnc" placeholder="Número de Rnc" class="form-control" />
+            <ValidationMessage For="@(() => Cliente.Rnc)" />
+        </div>
+
+        @*Email*@
+        <div class="mb-3">
+            <label class="form-label" for="Email">Email:</label>
+            <InputText @bind-Value="Cliente.Gmail" placeholder="Dirreción Email" class="form-control" />
+            <ValidationMessage For="@(() => Cliente.Gmail)" />
+        </div>
+
+        @*Direccion*@
+        <div class="mb-3">
+            <label class="form-label" for="Direccion">Direcci&oacute;n</label>
+            <InputTextArea @bind-Value="Cliente.Direccion" placeholder="Dirreción del Cliente" class="form-control" />
+            <ValidationMessage For="@(() => Cliente.Direccion)" />
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public int ClientesId { get; set; }
+    public Clientes Cliente { get; set; } = new Clientes();
+    public string Mensaje { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cliente.ClientesId = 1;
+
+        if (ClientesId > 0)
+        {
+            this.Cliente.ClientesId = ClientesId;
+            await Buscar();
+        }
+    }
+
+    public async Task Buscar()
+    {
+        var clienteEncontrado = await Httpclient.GetFromJsonAsync<Clientes>($"api/Clientes/{Cliente.ClientesId}");
+        if (clienteEncontrado != null)
+        {
+            this.Cliente = clienteEncontrado;
+            StateHasChanged();
+        }
+        else
+        {
+            Mensaje = "Ticket no encontrado";
+        }
+    }
+
+    public async Task Guardar()
+    {
+        using var response = await Httpclient.PostAsJsonAsync("api/Clientes", Cliente);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            return;
+        }
+        var clienteDevuelto = await response.Content.ReadFromJsonAsync<Clientes>();
+        if (clienteDevuelto is not null)
+        {
+            Cliente = clienteDevuelto;
+            StateHasChanged();
+        }
+    }
+}

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Clientes.Server", "Server\WASM_Clientes.Server.csproj", "{B523BC58-5554-465A-9B1E-A45613DE595F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Clientes.Server", "Server\WASM_Clientes.Server.csproj", "{B523BC58-5554-465A-9B1E-A45613DE595F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Clientes.Client", "Client\WASM_Clientes.Client.csproj", "{FF46B184-917A-4DF8-B440-47F06C5463A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Clientes.Client", "Client\WASM_Clientes.Client.csproj", "{FF46B184-917A-4DF8-B440-47F06C5463A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASM_Clientes.Shared", "Shared\WASM_Clientes.Shared.csproj", "{055145BA-684B-48A5-A3CF-DEA459962BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASM_Clientes.Shared", "Shared\WASM_Clientes.Shared.csproj", "{055145BA-684B-48A5-A3CF-DEA459962BAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
