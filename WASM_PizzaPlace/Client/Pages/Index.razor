@@ -1,0 +1,210 @@
+﻿@page "/PizzaPlace"
+@using WASM_PizzaPlace.Shared
+@inject NotificationService notificationservice
+
+<PageTitle>Pizza Place</PageTitle>
+
+<div class="card-header">
+	<h3 class="card align-items-center">Pizzeria!</h3>
+</div>
+
+<EditForm Model="clientes" OnValidSubmit="MostrarElMenu">
+    <div class="col-md-6">
+        <div Class="form-group">
+            <div class="input-group">
+                <span class="input-group-text">Email:</span>
+                <InputText @bind-Value="clientes.Email" placeholder="Introduce tu email" />
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+    </div>
+</EditForm>
+
+@if (MostrarMenu)
+{
+    <div class="card-header">
+        <h3 class="card align-items-center">Menu de Pizzas!</h3>
+    </div>
+
+    @foreach (var pizza in estados.Menu.Pizzas)
+    {
+        <div class="row">
+            <div class="col">
+                <strong>@pizza?.Nombre</strong>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <strong>
+                        @pizza?.Despricion
+                    </strong>
+                </div>
+            </div>
+            <div class="col text-right">@($"{pizza.Precio:0.00}")</div>
+            <div class="col">
+                <img src="https://i.pinimg.com/236x/5e/5c/06/5e5c06afeed213a39e8e7df49ac263a0.jpg" alt="@pizza.Picante" />
+            </div>
+            <div class="col">
+                <button class="btn btn-success pl-4 pr-4"
+                @onclick="@(() => AgregarALaCesta(pizza))">
+                    Ordenar
+                </button>
+            </div>
+        </div>
+    }
+
+    @if (estados.cestaDCompras.Pedidos.Any())
+    {
+        <h2 class="">Orden actual</h2>
+
+        @foreach (var (pizza, pos) in estados.cestaDCompras.Pedidos.Select((id, pos) => (estados.Menu.ObtenerPizzas(id), pos)))
+        {
+            <div class="row mb-2">
+                <div class="col">
+                    <strong>@pizza?.Nombre</strong>
+                </div>
+                <div class="col text-right">
+                    @($"{pizza?.Precio:0.00}")
+                </div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col">
+                    <button class="btn btn-danger"
+                    @onclick="@(() => RemoverDeLaCesta(pos))">
+                        Eliminar Pedido
+                    </button>
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col"><hr /></div>
+            <div class="col"></div>
+            <div class="col"> </div>
+            <div class="col"> </div>
+        </div>
+        <div class="row">
+            <div class="col"> Total:</div>
+            <div class="col text-right font-weight-bold">
+                $RD @($"{estados.PrecioTotal:0.00}")
+            </div>
+            <div class="col"> </div>
+            <div class="col"> </div>
+            <div class="col"> </div>
+        </div>
+    }
+
+    <div class="card-header mt-4 mb-2">
+        <h3 class="card align-items-center">Favor Ingresas sus Datos</h3>
+    </div>
+
+    <EditForm Model="@estados.cestaDCompras.clientes" OnValidSubmit="RealizarOrden">
+        <DataAnnotationsValidator />
+        <fieldset>
+            <div class="row mb-2">
+                <label class="col-2" for="Nombre">Nombre</label>
+                <InputText class="form-control col-6"
+                @bind-Value="@estados.cestaDCompras.clientes.Nombre" />
+                <ValidationMessage For="@(() => estados.cestaDCompras.clientes.Nombre)" />
+            </div>
+
+            <div class="row mb-2">
+                <label class="col-2" for="calle">Calle:</label>
+                <InputText class="form-control col-6" placeholder="Nombre de la calle y numero de la casa" id="calle" @bind-Value="estados.cestaDCompras.clientes.Calle" />
+                <ValidationMessage For="@(() => estados.cestaDCompras.clientes.Calle)" />
+            </div>
+
+            <div class="row mb-2">
+                <label class="col-2" for="ciudad">Ciudad:</label>
+                <InputSelect class="form-select" id="ciudad" @bind-Value="estados.cestaDCompras.clientes.Ciudad">
+                    <option value="">Elija la ciudad de procedencia</option>
+                    @foreach (var ciudad in NombreCiudades)
+                    {
+                        <option value="@ciudad">@ciudad</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => estados.cestaDCompras.clientes.Ciudad)" />
+            </div>
+
+            <div class="row mb-2">
+                <button class="mx-auto w-25 btn btn-success" @onclick="RealizarOrden">Realizar Pedido</button>
+            </div>
+
+        </fieldset>
+    </EditForm>
+}
+
+@code{
+
+    private Estados estados { get; } = new Estados();
+    public Clientes clientes { get; set; } = new Clientes();
+
+    private bool MostrarMenu = false;
+
+    protected override void OnInitialized()
+    {
+        estados.Menu.Add(new Pizzas(1, "Peperroni", "Pizza Picante", 450M, Picantes.Picante));
+        estados.Menu.Add(new Pizzas(2, "Margarita", "Pizza No Picante", 300M, Picantes.Nada));
+        estados.Menu.Add(new Pizzas(3, "Diablosa", "Pizza Muy Picante", 500M, Picantes.Muy_Picante));
+    }
+
+    private void MostrarElMenu()
+    {
+        MostrarMenu = true;
+    }
+
+    private List<string> NombreCiudades = new List<string>
+    {
+        "Santo Domingo",
+        "Santiago de los Caballeros",
+        "San Francisco de Macorís",
+        "Samaná",
+        "Higüey",
+        "La Romana",
+        "Puerto Plata",
+        "Jarabacoa",
+        "Constanza",
+        "Bonao",
+        "Cotuí",
+        "Sosua",
+        "Cabarete",
+        "Boca Chica",
+        "Barahona",
+        "Baní",
+        "Las Galeras",
+        "Las Terrenas",
+        "Juan Dolio",
+        "Miches"
+    };
+
+    private string PicanteImagenes(Picantes picante) => $"{picante.ToString().ToLower()}.png";
+
+    private void AgregarALaCesta(Pizzas pizza) => estados.cestaDCompras.Add(pizza.Id);
+
+    private void RemoverDeLaCesta(int pos) => estados.cestaDCompras.RemoveAt(pos);
+
+    public void RealizarOrden()
+    {
+        if (string.IsNullOrEmpty(clientes.Nombre) || string.IsNullOrEmpty(clientes.Calle) || string.IsNullOrEmpty(clientes.Ciudad))
+        {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error al realizar la orden",
+                    Detail = "Por favor, complete todos los campos obligatorios (Nombre, Calle y Ciudad).",
+                    Duration = 4_000
+                };
+            notificationservice.Notify(mensajeError);
+        }
+        else
+        {
+            var mensajeExito = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Orden Realizada",
+                    Detail = "Su orden ha sido realizada con éxito",
+                    Duration = 4_000
+                };
+            notificationservice.Notify(mensajeExito);
+        }
+    }
+
+}
