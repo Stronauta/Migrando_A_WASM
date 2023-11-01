@@ -1,5 +1,59 @@
-﻿<h3>C_Tickets</h3>
+﻿@page "/C_Tickets"
+@using WASM_Tickets.Shared
+@inject HttpClient httpClient
+
+<div class="card-header">
+	<h3 class="card align-items-center">Registro de Tickets</h3>
+</div>
+
+<div class="input-group mb-2 mt-4">
+    <input type="number" min="0" class="form-control" placeholder="Introduce un número para filtrar por: " id="filtroNumero">
+    <div class="input-group-append">
+        <button  @onclick="BuscarTickets" class="btn btn-outline-secondary">Buscar Todo</button>
+    </div>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Ticket#</th>
+            <th>Cliente#</th>
+            <th>Del Sistema</th>
+            <th>#Prioridad</th>
+            <th>Fecha</th>
+            <th>Solicitado Por</th>
+            <th>Asunto</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tickets in tickets)
+        {
+            <tr>
+                <td>@tickets.TicketsId</td>
+                <td>@tickets.ClientesId</td>
+                <td>@tickets.SistemaId</td>
+                <td>@tickets.PrioridadId</td>
+                <td>@tickets.Fecha</td>
+                <td>@tickets.SolicitadoPor</td>
+                <td>@tickets.Asunto</td>
+                <td>@tickets.Descripcion</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
+
+    public List<Tickets> tickets = new List<Tickets>();
+    public int conteo = 0;
+
+    public async Task BuscarTickets()
+    {
+        tickets = await httpClient.GetFromJsonAsync<List<Tickets>>("api/Tickets");
+
+        conteo = tickets != null ? tickets.Count : 0;
+        StateHasChanged();
+    }
 
 }
