@@ -1,5 +1,67 @@
-﻿<h3>C_Clientes</h3>
+﻿@page "/C_Clientes"
+@using WASM_Clientes.Shared
+@inject HttpClient Httpclient
+
+<div class="card-header">
+    <h3 class="card align-items-center">Registro de Clientes</h3>
+</div>
+
+<div class="input-group mb-3 mt-3">
+    <input type="number" class="form-control" placeholder="Ingrese ID de Cliente">
+    <div class="input-group-append">
+        <button  class="btn btn-outline-secondary">Mostrar todos</button>
+    </div>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>ID de Cliente</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Celular</th>
+            <th>RNC</th>
+            <th>Email</th>
+            <th>Dirección</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cliente in clientes)
+        {
+            <tr>
+                <td>@cliente.ClientesId</td>
+                <td>@cliente.Nombre</td>
+                <td>@cliente.Telefono</td>
+                <td>@cliente.Celular</td>
+                <td>@cliente.Rnc</td>
+                <td>@cliente.Gmail</td>
+                <td>@cliente.Direccion</td>
+                <td>
+                    <button @onclick="() => EliminarCliente(cliente.ClientesId)" class="btn btn-danger btn-sm">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
 
+    public List<Clientes> clientes = new List<Clientes>();
+
+    public async Task BuscarClientes()
+    {
+        clientes = await Httpclient.GetFromJsonAsync<List<Clientes>>("api/Clientes");
+
+        StateHasChanged();
+    }
+
+    private async Task EliminarCliente(int clienteId)
+    {
+        var response = await Httpclient.DeleteAsync($"api/Clientes/{clienteId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            await BuscarClientes();
+        }
+    }
 }
